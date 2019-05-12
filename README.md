@@ -12,6 +12,10 @@ Official Volumio Homepage [https://volumio.org](https://volumio.org)
 * electron (v4.1.4)
 * npm (v6.9.0)
 
+## Volumio2 Setup and Install Instructions
+
+This [link](https://volumio.org/get-started/) will guide you through the installation process.
+
 ## Setup
 Clone the repository (`git clone https://github.com/lombad/Volumio2-Client.git`).
 
