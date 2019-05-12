@@ -1,0 +1,60 @@
+<html>
+  <head>
+
+    <!-- DOES NOT WORK -->
+    <!-- <link rel="stylesheet" href="/assets/volumio-vendor/vendor-aa5c8b9861.css"> -->
+    <link rel="stylesheet" href="http://volum.io/styles/vendor-aa5c8b9861.css">
+    <link rel="stylesheet" href="http://volum.io/styles/app-4298570c99.css">
+
+    <script src="./welcome.js"></script>
+
+    <style>
+      body {
+        background: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="background-image: url(http://localhost:8837/assets/img/albumart.jpeg);width:100%;height: 100%;position: absolute;background-position: center;background-size: cover;">
+      <div id="content">
+        <div id="pluginWrapper">
+          <div class="box">
+            <div class="boxHeader">
+              <div class="title">
+                <h2>Welcome to the Volumio2 Client</h2>
+              </div>
+            </div>
+
+            <div style="position: fixed; bottom: 0; width:100%">
+            <div class="panel panel-default" style="margin-right: 30px" >
+              <!-- <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-plug"></i>
+                      Network Settings
+                </h3>
+              </div> -->
+              
+              <div class="panel-body ">
+                <form class="form-horizontal">
+                  <div class="form-group">
+                    <label class="control-label">Volumio URL</label>
+                    <div class="control-item">
+                      <input id="url" class="form-control" placeholder="Url of the volumio2 server (e.g. http://192.168.1.5)">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="control-buttons">
+                      <button type="button" id="save-url" class="btn btn-info">Save</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
