@@ -6,7 +6,7 @@ Volumio2 Client based on the Electron framework - Audiophile Music Player Deskto
 Volumio2-Client is tested on Arch Linux and Windows 7 Professional at the time. The binary packages will be included soon... so stay tuned.
 
 ## Dependencies
-
+* volumio (v2.575)
 * electron (v4.1.4)
 * npm (v6.9.0)
 
