@@ -1,7 +1,7 @@
 # Volumio2-Client
 Volumio2 Client based on the Electron framework - Audiophile Music Player Desktop
 
-... minimized into the Tray if not needed
+**... minimized into the Tray if not needed**
 
 Volumio2-Client is tested on Arch Linux and Windows 7 Professional at the time. The binary packages will be included soon... so stay tuned.
 
