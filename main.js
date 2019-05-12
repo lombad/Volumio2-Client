@@ -176,7 +176,7 @@ let onClose = () => {
 // ##################################################################### APPLICATION MAIN
 app.on("ready", () => {
   // construct tray
-  tray = new Tray('./assets/img/favicon-play.png')
+  tray = new Tray(path.join(__dirname, 'assets/img/favicon-play.png'))
   const contextMenu = Menu.buildFromTemplate([
   //   { label: 'Show/Hide Window' },
     { label: 'Settings', click: onSettingsClickHandler},
