@@ -192,5 +192,6 @@ app.on("ready", () => {
   tray.on("click", () => {
     win_main.isVisible() ? win_main.hide() : win_main.show()
   })
+  
 })
 
