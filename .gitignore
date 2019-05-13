@@ -5,6 +5,7 @@
 .vscode
 dist
 notes
+volumio-linux-x64
 
 ### Windows template
 # Windows image file caches

@@ -175,6 +175,10 @@ let onClose = () => {
 
 // ##################################################################### APPLICATION MAIN
 app.on("ready", () => {
+
+  // construct window
+  loadVolumio()
+
   // construct tray
   tray = new Tray(path.join(__dirname, 'assets/img/favicon-play.png'))
   const contextMenu = Menu.buildFromTemplate([
@@ -188,8 +192,5 @@ app.on("ready", () => {
   tray.on("click", () => {
     win_main.isVisible() ? win_main.hide() : win_main.show()
   })
-
-  // construct window
-  loadVolumio()
 })
 
