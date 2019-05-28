@@ -14,8 +14,8 @@ const port = 8837
 const urlExists = require('url-exists');
 
 // ##################################################################### DEBUG
-const showFrame = true;
-const showDevTools = true;
+const showFrame = false;
+const showDevTools = false;
 const debugLog = true;
 
 // ##################################################################### VARIABLES
