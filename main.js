@@ -17,6 +17,9 @@ const showFrame = false;
 const showDevTools = false;
 const debugLog = true;
 
+// ##################################################################### STATIC VARIABLES
+const SERVER_CHECK_INTERVAL = 2000;
+
 // ##################################################################### VARIABLES
 let tray = null;
 let win_main = null;
@@ -50,6 +53,7 @@ let debug = (...args) => {
 // ##################################################################### LOADING VOLUMIO
 
 let loadVolumio = () => {
+  console.log("loadVolumio");
   loaded = false;
   urlExists(config.get('url'), function (err, exists) {
     if (err)
@@ -71,6 +75,26 @@ let loadVolumio = () => {
       firstStart = true
     }
   });
+}
+
+// ##################################################################### FREQUENT CHECK
+
+let periodicCheckServer = () => {
+  console.log(firstStart, loaded);
+  
+  return setTimeout(() => {
+    urlExists(config.get('url'), function (err, exists) {
+      if (err)
+        debug(`Error@urlExists: ${err}`)
+      debug(`${config.get('url')} exists ? ${exists}`);
+      if(exists){
+        if(firstStart && loaded)
+          loadVolumio();
+      } else {
+        periodicCheckServer();
+      }
+    });
+  }, SERVER_CHECK_INTERVAL);
 }
 
 // ##################################################################### WINDOW GENERATOR
@@ -210,6 +234,8 @@ app.on("ready", () => {
         win_settings.isVisible() ? win_settings.hide() : win_settings.show()
     }
   })
+
+  periodicCheckServer();
 
 })
 
