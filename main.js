@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, Tray } = require('electron')
+const { app, globalShortcut, BrowserWindow, Menu, Tray } = require('electron')
 const { ipcMain } = require('electron')
 const path = require('path')
 const os = require('os')
@@ -33,6 +33,18 @@ if (!config.has('url'))
   config.set('url', 'http://volumio.local/')
 if (!config.has('onBlurClose'))
   config.set('onBlurClose', true)
+if (!config.has('keyboardShortcutsEnabled'))
+  config.set('keyboardShortcutsEnabled', false);
+if (!config.has('keyboardShortcuts'))
+  config.set(
+    'keyboardShortcuts', {
+      'volumeUp': undefined,
+      'volumeDown': undefined,
+      'playNext': undefined,
+      'playPrevious': undefined,
+      'openVolumio': undefined
+    }
+  )
 
 // ##################################################################### SERVE STATIC CONTENT
 eapp.use('/app/themes/volumio/assets/variants/volumio/fonts', express.static(path.join(__dirname, 'assets', 'fonts')))
@@ -170,19 +182,56 @@ ipcMain.on('save-network', (event, arg) => {
   }
 })
 
+ipcMain.on('save-shortcuts', (event, arg) => {
+  console.log("save-shortcuts");
+  console.log(arg);
+
+  if (config.get('keyboardShortcutsEnabled') != Boolean(arg.keyboardShortcutsEnabled)) {
+    config.set('keyboardShortcutsEnabled', arg.keyboardShortcutsEnabled)
+  }
+
+  if (config.get('keyboardShortcuts') != Object(arg.keyboardShortcuts)) {
+    config.set('keyboardShortcuts', arg.keyboardShortcuts)
+  }
+})
+
 // ##################################################################### TRAY CLICK HANDLERS
 let onSettingsClickHandler = (menuItem, browserWindow, event) => {
   if (win_main.isVisible()) {
     win_main.hide()
   }
   win_settings.show();
-  // createSettingsWindow(false)
 }
 
 let onClose = () => {
   config.save()
   win_settings.close()
   win_main.close()
+}
+
+let createShortcuts = () => {
+  if (config.get('keyboardShortcutsEnabled') == true) {
+    if (config.get('keyboardShortcuts').volumeUp)
+      globalShortcut.register(config.get('keyboardShortcuts').volumeUp, () => {
+        console.log(`${config.get('keyboardShortcuts').volumeUp} was pressed (volumeUp)`)
+      })
+    if (config.get('keyboardShortcuts').volumeDown)
+      globalShortcut.register(config.get('keyboardShortcuts').volumeDown, () => {
+        console.log(`${config.get('keyboardShortcuts').volumeDown} was pressed (volumeDown)`)
+      })
+    if (config.get('keyboardShortcuts').playNext)
+      globalShortcut.register(config.get('keyboardShortcuts').playNext, () => {
+        console.log(`${config.get('keyboardShortcuts').playNext} was pressed (playNext)`)
+      })
+    if (config.get('keyboardShortcuts').playPrevious)
+      globalShortcut.register(config.get('keyboardShortcuts').playPrevious, () => {
+        console.log(`${config.get('keyboardShortcuts').playPrevious} was pressed (playPrevious)`)
+      })
+    if (config.get('keyboardShortcuts').openVolumio)
+      globalShortcut.register(config.get('keyboardShortcuts').openVolumio, () => {
+        console.log(`${config.get('keyboardShortcuts').openVolumio} was pressed (openVolumio)`)
+      })
+  }
 }
 
 // ##################################################################### APPLICATION MAIN
@@ -211,5 +260,6 @@ app.on("ready", () => {
     }
   })
 
+  createShortcuts();
 })
 
