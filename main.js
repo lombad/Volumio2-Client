@@ -2,6 +2,7 @@ const { app, BrowserWindow, Menu, Tray } = require('electron')
 const { ipcMain } = require('electron')
 const path = require('path')
 const os = require('os')
+const fs = require('fs')
 
 const Store = require('data-store')
 const config = new Store({ path: path.join(os.homedir(), '.config/volumio/config.json') });
@@ -52,6 +53,10 @@ let debug = (...args) => {
 
 // ##################################################################### LOADING VOLUMIO
 
+let injectCSS = () => {
+
+}
+
 let loadVolumio = () => {
   console.log("loadVolumio");
   loaded = false;
@@ -62,6 +67,14 @@ let loadVolumio = () => {
     if (exists) {
       createMainWindow()
       win_main.loadURL(config.get('url'))
+      win_main.webContents.on('did-finish-load', function() {
+        fs.readFile(__dirname + '/main_injected.css', "utf-8", function(error, data) {
+          if(!error){
+            // var formatedData = data.replace(/\s{2,10}/g, ' ').trim()
+            win_main.webContents.insertCSS(data)
+          }
+        })
+      })
       win_main.show()
       createSettingsWindow()
       win_settings.loadURL(`file://${__dirname}/settings.html`)
