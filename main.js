@@ -2,6 +2,7 @@ const { app, globalShortcut, BrowserWindow, Menu, Tray } = require('electron')
 const { ipcMain } = require('electron')
 const path = require('path')
 const os = require('os')
+const fs = require('fs')
 
 const Store = require('data-store')
 const config = new Store({ path: path.join(os.homedir(), '.config/volumio/config.json') });
@@ -16,6 +17,9 @@ const urlExists = require('url-exists');
 const showFrame = false;
 const showDevTools = false;
 const debugLog = true;
+
+// ##################################################################### STATIC VARIABLES
+const SERVER_CHECK_INTERVAL = 2000;
 
 // ##################################################################### VARIABLES
 let tray = null;
@@ -61,7 +65,12 @@ let debug = (...args) => {
 
 // ##################################################################### LOADING VOLUMIO
 
+let injectCSS = () => {
+
+}
+
 let loadVolumio = () => {
+  console.log("loadVolumio");
   loaded = false;
   urlExists(config.get('url'), function (err, exists) {
     if (err)
@@ -70,6 +79,14 @@ let loadVolumio = () => {
     if (exists) {
       createMainWindow()
       win_main.loadURL(config.get('url'))
+      win_main.webContents.on('did-finish-load', function() {
+        fs.readFile(__dirname + '/main_injected.css', "utf-8", function(error, data) {
+          if(!error){
+            // var formatedData = data.replace(/\s{2,10}/g, ' ').trim()
+            win_main.webContents.insertCSS(data)
+          }
+        })
+      })
       win_main.show()
       createSettingsWindow()
       win_settings.loadURL(`file://${__dirname}/settings.html`)
@@ -83,6 +100,26 @@ let loadVolumio = () => {
       firstStart = true
     }
   });
+}
+
+// ##################################################################### FREQUENT CHECK
+
+let periodicCheckServer = () => {
+  console.log(firstStart, loaded);
+  
+  return setTimeout(() => {
+    urlExists(config.get('url'), function (err, exists) {
+      if (err)
+        debug(`Error@urlExists: ${err}`)
+      debug(`${config.get('url')} exists ? ${exists}`);
+      if(exists){
+        if(firstStart && loaded)
+          loadVolumio();
+      } else {
+        periodicCheckServer();
+      }
+    });
+  }, SERVER_CHECK_INTERVAL);
 }
 
 // ##################################################################### WINDOW GENERATOR
@@ -227,6 +264,10 @@ let createShortcuts = () => {
       globalShortcut.register(config.get('keyboardShortcuts').playPrevious, () => {
         console.log(`${config.get('keyboardShortcuts').playPrevious} was pressed (playPrevious)`)
       })
+    if (config.get('keyboardShortcuts').playToggle)
+      globalShortcut.register(config.get('keyboardShortcuts').playToggle, () => {
+        console.log(`${config.get('keyboardShortcuts').playToggle} was pressed (playToggle)`)
+      })
     if (config.get('keyboardShortcuts').openVolumio)
       globalShortcut.register(config.get('keyboardShortcuts').openVolumio, () => {
         console.log(`${config.get('keyboardShortcuts').openVolumio} was pressed (openVolumio)`)
@@ -261,5 +302,7 @@ app.on("ready", () => {
   })
 
   createShortcuts();
+  periodicCheckServer();
+
 })
 
