@@ -46,6 +46,7 @@ if (!config.has('keyboardShortcuts'))
       'volumeDown': undefined,
       'playNext': undefined,
       'playPrevious': undefined,
+      'playToggle': undefined,
       'openVolumio': undefined
     }
   )
@@ -64,10 +65,6 @@ let debug = (...args) => {
 }
 
 // ##################################################################### LOADING VOLUMIO
-
-let injectCSS = () => {
-
-}
 
 let loadVolumio = () => {
   console.log("loadVolumio");
@@ -223,12 +220,20 @@ ipcMain.on('save-shortcuts', (event, arg) => {
   console.log("save-shortcuts");
   console.log(arg);
 
+  let change = false;
+
   if (config.get('keyboardShortcutsEnabled') != Boolean(arg.keyboardShortcutsEnabled)) {
     config.set('keyboardShortcutsEnabled', arg.keyboardShortcutsEnabled)
+    change = true;
   }
 
   if (config.get('keyboardShortcuts') != Object(arg.keyboardShortcuts)) {
     config.set('keyboardShortcuts', arg.keyboardShortcuts)
+    change = true;
+  }
+
+  if(change){
+    createShortcuts();
   }
 })
 
@@ -247,6 +252,9 @@ let onClose = () => {
 }
 
 let createShortcuts = () => {
+  
+  globalShortcut.unregisterAll();
+
   if (config.get('keyboardShortcutsEnabled') == true) {
     if (config.get('keyboardShortcuts').volumeUp)
       globalShortcut.register(config.get('keyboardShortcuts').volumeUp, () => {
