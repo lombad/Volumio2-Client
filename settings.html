@@ -173,6 +173,70 @@
               </div>
             </form>
 
+            <script>
+              let volumeUpElement = document.getElementById("volumeUp");
+              let volumeDownElement = document.getElementById("volumeDown");
+              let playToggleElement = document.getElementById("playToggle");
+              let playNextElement = document.getElementById("playNext");
+              let playPreviousElement = document.getElementById("playPrevious");
+
+              let keyboard_shortcut = []
+              let keyups = []
+
+              let capture_start = false;
+              let capture_target = undefined;
+              let capture = (e, type) => {
+                e.preventDefault;
+
+                console.log(type, e.key, capture_start, e.target, capture_target );
+
+                if(capture_target !== e.target){
+                  capture_target = e.target;
+                  keyboard_shortcut = [];
+                  keyups = [];
+                  capture_start = false;
+                }
+
+                if(type === "keyup" && keyups.length === keyboard_shortcut.length){
+                  capture_target = undefined;
+                  capture_start = false;
+                  e.target.value = keyboard_shortcut.join("+");
+                  keyboard_shortcut = [];
+                  keyups = [];
+                }
+
+                if(type === "keydown" && keyboard_shortcut.length === 0){
+                  capture_start = true;
+                }
+
+                if(type === "keyup" && capture_start && keyups.find((v) => v === e.key) === undefined){
+                  keyups.push(e.key);
+                }
+
+                if(type === "keydown" && capture_start && keyboard_shortcut.find((v) => v === e.key) === undefined){
+                  keyboard_shortcut.push(e.key);
+                }
+
+                
+                
+              }
+
+              volumeUpElement.addEventListener("keydown", (e) => capture(e, "keydown"))
+              volumeDownElement.addEventListener("keydown", (e) => capture(e, "keydown"))
+              playToggleElement.addEventListener("keydown", (e) => capture(e, "keydown"))
+              volumeUpElement.addEventListener("keydown", (e) => capture(e, "keydown"))
+              playNextElement.addEventListener("keydown", (e) => capture(e, "keydown"))
+              playPreviousElement.addEventListener("keydown", (e) => capture(e, "keydown"))
+
+              volumeUpElement.addEventListener("keyup", (e) => capture(e, "keyup"))
+              volumeDownElement.addEventListener("keyup", (e) => capture(e, "keyup"))
+              playToggleElement.addEventListener("keyup", (e) => capture(e, "keyup"))
+              volumeUpElement.addEventListener("keyup", (e) => capture(e, "keyup"))
+              playNextElement.addEventListener("keyup", (e) => capture(e, "keyup"))
+              playPreviousElement.addEventListener("keyup", (e) => capture(e, "keyup"))
+
+            </script>
+
             <form class="form-horizontal">
               <div class="form-group">
                 <label class="control-label">Open Volumio</label>
