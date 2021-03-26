@@ -23,7 +23,7 @@ Change into the `Volumio2-Client` folder (`cd Volumio2-Client`).
 
 Install the node dependencies and run the application.
 ```
-nmp install
+npm install
 
 electron .
 ```
