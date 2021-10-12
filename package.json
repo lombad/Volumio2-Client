@@ -10,7 +10,7 @@
   "author": "lombad",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^9.1.0",
+    "electron": "^11.5.0",
     "url-parse": "^1.4.7"
   },
   "dependencies": {
